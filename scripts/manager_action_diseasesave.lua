@@ -2,7 +2,7 @@
 -- Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 -- luacheck: globals notifyApplySave getRoll modSave
-OOB_MSGTYPE_APPLYDISEASESAVE = "applysave"
+OOB_MSGTYPE_APPLYDISEASESAVE = 'applysave'
 
 function notifyApplySave(rSource, rRoll)
 	local msgOOB = {}
@@ -15,7 +15,7 @@ function notifyApplySave(rSource, rRoll)
 	end
 	msgOOB.sDesc = rRoll.sDesc
 	msgOOB.nTotal = ActionsManager.total(rRoll)
-	msgOOB.sSaveDesc = rRoll.sSaveDesc or ""
+	msgOOB.sSaveDesc = rRoll.sSaveDesc or ''
 	msgOOB.nTarget = rRoll.nTarget
 	msgOOB.sSaveResult = rRoll.sSaveResult
 	if rRoll.bRemoveOnMiss then
@@ -25,104 +25,98 @@ function notifyApplySave(rSource, rRoll)
 	local sSourceNode = ActorManager.getCreatureNode(rSource)
 	msgOOB.sSourceNode = sSourceNode
 
-	if rRoll.sSource ~= "" then
+	if rRoll.sSource ~= '' then
 		msgOOB.sTargetNode = rRoll.sSource
 	else
-		msgOOB.sTargetNode = ""
+		msgOOB.sTargetNode = ''
 	end
 
 	local nodeDiseaseRoll = DB.findNode(rRoll.nodeDisease)
-	if DB.getValue(nodeDiseaseRoll, "savesreq") ~= 0 then
-		if rRoll.sSaveResult:match("failure") and DB.getValue(nodeDiseaseRoll, "isconsecutive", 1) == 1 then
-			DB.setValue(nodeDiseaseRoll, "savecount_consec", "number", 0)
-		elseif rRoll.sSaveResult:match("success") then
-			DB.setValue(
-				nodeDiseaseRoll,
-				"savecount_consec",
-				"number",
-				DB.getValue(nodeDiseaseRoll, "savecount_consec", 0) + 1
-			)
+	if DB.getValue(nodeDiseaseRoll, 'savesreq') ~= 0 then
+		if rRoll.sSaveResult:match('failure') and DB.getValue(nodeDiseaseRoll, 'isconsecutive', 1) == 1 then
+			DB.setValue(nodeDiseaseRoll, 'savecount_consec', 'number', 0)
+		elseif rRoll.sSaveResult:match('success') then
+			DB.setValue(nodeDiseaseRoll, 'savecount_consec', 'number', DB.getValue(nodeDiseaseRoll, 'savecount_consec', 0) + 1)
 
-			local nConsecutiveSaves = DB.getValue(nodeDiseaseRoll, "savecount_consec", 0)
-			local nSavesReq = DB.getValue(nodeDiseaseRoll, "savesreq", 0)
+			local nConsecutiveSaves = DB.getValue(nodeDiseaseRoll, 'savecount_consec', 0)
+			local nSavesReq = DB.getValue(nodeDiseaseRoll, 'savesreq', 0)
 			if nSavesReq ~= 0 and nConsecutiveSaves >= nSavesReq then
-				DB.setValue(nodeDiseaseRoll, "starttime", "number", nil)
-				DB.setValue(nodeDiseaseRoll, "starttimestring", "string", nil)
-				DB.setValue(nodeDiseaseRoll, "savecount", "number", nil)
-				local sDiseaseName = DB.getValue(nodeDiseaseRoll, "name", 0)
-				if not string.find(DB.getValue(nodeDiseaseRoll, "name", ""), "%[CURED%]") then
-					DB.setValue(nodeDiseaseRoll, "name", "string", "[CURED] " .. sDiseaseName)
+				DB.setValue(nodeDiseaseRoll, 'starttime', 'number', nil)
+				DB.setValue(nodeDiseaseRoll, 'starttimestring', 'string', nil)
+				DB.setValue(nodeDiseaseRoll, 'savecount', 'number', nil)
+				local sDiseaseName = DB.getValue(nodeDiseaseRoll, 'name', 0)
+				if not string.find(DB.getValue(nodeDiseaseRoll, 'name', ''), '%[CURED%]') then
+					DB.setValue(nodeDiseaseRoll, 'name', 'string', '[CURED] ' .. sDiseaseName)
 				end
 			end
 		end
 	end
 
-	Comm.deliverOOBMessage(msgOOB, "")
+	Comm.deliverOOBMessage(msgOOB, '')
 
-	if rRoll.sSaveResult:match("failure") then
-		local sMaladyEffect = ""
-		local nodeDiseaseEffect = DB.getChild(nodeDiseaseRoll, "disease_effect")
+	if rRoll.sSaveResult:match('failure') then
+		local sMaladyEffect = ''
+		local nodeDiseaseEffect = DB.getChild(nodeDiseaseRoll, 'disease_effect')
 		if nodeDiseaseEffect then
 			sMaladyEffect = nodeDiseaseEffect.getText()
 		end
 
-		local sPoisonEffect = DB.getValue(nodeDiseaseRoll, "poison_effect_primary", "")
-		if sPoisonEffect ~= "" then
-			sMaladyEffect = Interface.getString("disease_failure_effect_primary"):format(sMaladyEffect, sPoisonEffect)
+		local sPoisonEffect = DB.getValue(nodeDiseaseRoll, 'poison_effect_primary', '')
+		if sPoisonEffect ~= '' then
+			sMaladyEffect = Interface.getString('disease_failure_effect_primary'):format(sMaladyEffect, sPoisonEffect)
 		end
 
-		local sPoisonSecondary = DB.getValue(nodeDiseaseRoll, "poison_effect_secondary", "")
-		if sPoisonSecondary ~= "" then
-			sMaladyEffect = Interface.getString("disease_failure_effect_secondary")
-				:format(sMaladyEffect, sPoisonSecondary)
+		local sPoisonSecondary = DB.getValue(nodeDiseaseRoll, 'poison_effect_secondary', '')
+		if sPoisonSecondary ~= '' then
+			sMaladyEffect = Interface.getString('disease_failure_effect_secondary'):format(sMaladyEffect, sPoisonSecondary)
 		end
 
-		ChatManager.Message(Interface.getString("disease_failure_effect") .. " " .. sMaladyEffect, true, rSource)
+		ChatManager.Message(Interface.getString('disease_failure_effect') .. ' ' .. sMaladyEffect, true, rSource)
 	end
 end
 
 function getRoll(rActor, nodeDisease)
 	local rRoll = {}
-	rRoll.sType = "disease"
-	rRoll.aDice = { "d20" }
+	rRoll.sType = 'disease'
+	rRoll.aDice = { 'd20' }
 	rRoll.nMod = 0
 
 	-- Look up actor specific information
 	local sAbility = nil
 	local nodeActor = ActorManager.getCreatureNode(rActor)
-	local sSave = DB.getValue(nodeDisease, "savetype")
+	local sSave = DB.getValue(nodeDisease, 'savetype')
 	if nodeActor then
 		if ActorManager.isPC(rActor) then
-			rRoll.nMod = DB.getValue(nodeActor, string.format("saves.%s.total", sSave), 0)
-			sAbility = DB.getValue(nodeActor, string.format("saves.%s.ability", sSave), "")
+			rRoll.nMod = DB.getValue(nodeActor, string.format('saves.%s.total', sSave), 0)
+			sAbility = DB.getValue(nodeActor, string.format('saves.%s.ability', sSave), '')
 		else
-			rRoll.nMod = DB.getValue(nodeActor, sSave .. "save", 0)
+			rRoll.nMod = DB.getValue(nodeActor, sSave .. 'save', 0)
 		end
 	end
 
-	local sDiseaseType = string.lower(DB.getValue(nodeDisease, "type"))
-	if sDiseaseType ~= "" then
-		rRoll.tags = sDiseaseType .. "tracker"
+	local sDiseaseType = string.lower(DB.getValue(nodeDisease, 'type'))
+	if sDiseaseType ~= '' then
+		rRoll.tags = sDiseaseType .. 'tracker'
 	end
 
-	rRoll.sDesc = "[DISEASE] " .. StringManager.capitalize(sSave)
-	if sDiseaseType == "poison" then
-		rRoll.sDesc = "[POISON] " .. StringManager.capitalize(sSave)
+	rRoll.sDesc = '[DISEASE] ' .. StringManager.capitalize(sSave)
+	if sDiseaseType == 'poison' then
+		rRoll.sDesc = '[POISON] ' .. StringManager.capitalize(sSave)
 	end
-	if sAbility and sAbility ~= "" then
+	if sAbility and sAbility ~= '' then
 		if
-			(sSave == "fortitude" and sAbility ~= "constitution")
-			or (sSave == "reflex" and sAbility ~= "dexterity")
-			or (sSave == "will" and sAbility ~= "wisdom")
+			(sSave == 'fortitude' and sAbility ~= 'constitution')
+			or (sSave == 'reflex' and sAbility ~= 'dexterity')
+			or (sSave == 'will' and sAbility ~= 'wisdom')
 		then
 			local sAbilityEffect = DataCommon.ability_ltos[sAbility]
 			if sAbilityEffect then
-				rRoll.sDesc = string.format("%s [MOD:%s]", rRoll.sDesc, sAbilityEffect)
+				rRoll.sDesc = string.format('%s [MOD:%s]', rRoll.sDesc, sAbilityEffect)
 			end
 		end
 	end
 
-	local nDC = DB.getValue(nodeDisease, "savedc")
+	local nDC = DB.getValue(nodeDisease, 'savedc')
 	if nDC == 0 then
 		nDC = nil
 	end
@@ -132,14 +126,14 @@ function getRoll(rActor, nodeDisease)
 end
 
 local function guessSaveAbility(sSaveType)
-	Debug.console(Interface.getString("disease_debug_guesssavestat"))
+	Debug.console(Interface.getString('disease_debug_guesssavestat'))
 	local sActionStat
-	if sSaveType == "fortitude" then
-		sActionStat = "constitution"
-	elseif sSaveType == "reflex" then
-		sActionStat = "dexterity"
-	elseif sSaveType == "will" then
-		sActionStat = "wisdom"
+	if sSaveType == 'fortitude' then
+		sActionStat = 'constitution'
+	elseif sSaveType == 'reflex' then
+		sActionStat = 'dexterity'
+	elseif sSaveType == 'will' then
+		sActionStat = 'wisdom'
 	end
 
 	return sActionStat
@@ -151,7 +145,7 @@ function modSave(rSource, _, rRoll)
 	local nAddMod = 0
 
 	-- Determine save type
-	local sSaveMatch = rRoll.sDesc:match("%]%s%a+%s%("):sub(2, -2)
+	local sSaveMatch = rRoll.sDesc:match('%]%s%a+%s%('):sub(2, -2)
 	local sSave
 	if sSaveMatch then
 		sSave = StringManager.trim(sSaveMatch):lower()
@@ -162,7 +156,7 @@ function modSave(rSource, _, rRoll)
 
 		-- Determine ability used
 		local sActionStat = nil
-		local sModStat = string.match(rRoll.sDesc, "%[MOD:(%w+)%]")
+		local sModStat = string.match(rRoll.sDesc, '%[MOD:(%w+)%]')
 		if sModStat then
 			sActionStat = DataCommon.ability_stol[sModStat]
 		end
@@ -178,11 +172,9 @@ function modSave(rSource, _, rRoll)
 
 		-- Determine flatfooted status
 		local bFlatfooted = false
-		if not rRoll.bVsSave and ModifierStack.getModifierKey("ATT_FF") then
+		if not rRoll.bVsSave and ModifierStack.getModifierKey('ATT_FF') then
 			bFlatfooted = true
-		elseif
-			EffectManager35E.hasEffect(rSource, "Flat-footed") or EffectManager35E.hasEffect(rSource, "Flatfooted")
-		then
+		elseif EffectManager35E.hasEffect(rSource, 'Flat-footed') or EffectManager35E.hasEffect(rSource, 'Flatfooted') then
 			bFlatfooted = true
 		end
 
@@ -192,7 +184,7 @@ function modSave(rSource, _, rRoll)
 			rSaveSource = ActorManager.resolveActor(rRoll.sSource)
 		end
 		local aExistingBonusByType = {}
-		local aSaveEffects = EffectManager35E.getEffectsByType(rSource, "SAVE", aSaveFilter, rSaveSource, false)
+		local aSaveEffects = EffectManager35E.getEffectsByType(rSource, 'SAVE', aSaveFilter, rSaveSource, false)
 		for _, v in pairs(aSaveEffects) do
 			-- Determine bonus type if any
 			local sBonusType = nil
@@ -204,7 +196,7 @@ function modSave(rSource, _, rRoll)
 			end
 			-- Dodge bonuses stack (by rules)
 			if sBonusType then
-				if sBonusType == "dodge" then
+				if sBonusType == 'dodge' then
 					if not bFlatfooted then
 						nAddMod = nAddMod + v.mod
 						bEffects = true
@@ -230,19 +222,19 @@ function modSave(rSource, _, rRoll)
 
 		-- Get condition modifiers
 		if
-			EffectManager35E.hasEffectCondition(rSource, "Frightened")
-			or EffectManager35E.hasEffectCondition(rSource, "Panicked")
-			or EffectManager35E.hasEffectCondition(rSource, "Shaken")
+			EffectManager35E.hasEffectCondition(rSource, 'Frightened')
+			or EffectManager35E.hasEffectCondition(rSource, 'Panicked')
+			or EffectManager35E.hasEffectCondition(rSource, 'Shaken')
 		then
 			nAddMod = nAddMod - 2
 			bEffects = true
 		end
-		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
+		if EffectManager35E.hasEffectCondition(rSource, 'Sickened') then
 			nAddMod = nAddMod - 2
 			bEffects = true
 		end
-		if sSave == "reflex" then
-			if EffectManager35E.hasEffectCondition(rSource, "Slowed") then
+		if sSave == 'reflex' then
+			if EffectManager35E.hasEffectCondition(rSource, 'Slowed') then
 				nAddMod = nAddMod - 1
 				bEffects = true
 			end
@@ -256,7 +248,7 @@ function modSave(rSource, _, rRoll)
 		end
 
 		-- Get negative levels
-		local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rSource, { "NLVL" }, true)
+		local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rSource, { 'NLVL' }, true)
 		if nNegLevelCount > 0 then
 			bEffects = true
 			nAddMod = nAddMod - nNegLevelMod
@@ -264,30 +256,30 @@ function modSave(rSource, _, rRoll)
 
 		-- If flatfooted, then add a note
 		if bFlatfooted then
-			table.insert(aAddDesc, "[FF]")
+			table.insert(aAddDesc, '[FF]')
 		end
 
 		-- If effects, then add them
 		if bEffects then
 			local sEffects
 			local sMod = DiceManager.convertDiceToString(aAddDice, nAddMod, true)
-			if sMod ~= "" then
-				sEffects = string.format("[%s %s]", Interface.getString("effects_tag"), sMod)
+			if sMod ~= '' then
+				sEffects = string.format('[%s %s]', Interface.getString('effects_tag'), sMod)
 			else
-				sEffects = string.format("[%s]", Interface.getString("effects_tag"))
+				sEffects = string.format('[%s]', Interface.getString('effects_tag'))
 			end
 			table.insert(aAddDesc, sEffects)
 		end
 	end
 
 	if #aAddDesc > 0 then
-		rRoll.sDesc = string.format("%s %s", rRoll.sDesc, table.concat(aAddDesc, " "))
+		rRoll.sDesc = string.format('%s %s', rRoll.sDesc, table.concat(aAddDesc, ' '))
 	end
 	for _, vDie in ipairs(aAddDice) do
-		if vDie:sub(1, 1) == "-" then
-			table.insert(rRoll.aDice, "-p" .. vDie:sub(3))
+		if vDie:sub(1, 1) == '-' then
+			table.insert(rRoll.aDice, '-p' .. vDie:sub(3))
 		else
-			table.insert(rRoll.aDice, "p" .. vDie:sub(2))
+			table.insert(rRoll.aDice, 'p' .. vDie:sub(2))
 		end
 	end
 	rRoll.nMod = rRoll.nMod + nAddMod
@@ -297,9 +289,9 @@ end
 function performRoll(draginfo, rActor, nodeDisease)
 	local rRoll = getRoll(rActor, nodeDisease)
 
-	local sDiseaseName = DB.getValue(nodeDisease, "name")
-	if sDiseaseName and sDiseaseName ~= "" then
-		rRoll.sDesc = string.format(Interface.getString("disease_against"), rRoll.sDesc, sDiseaseName)
+	local sDiseaseName = DB.getValue(nodeDisease, 'name')
+	if sDiseaseName and sDiseaseName ~= '' then
+		rRoll.sDesc = string.format(Interface.getString('disease_against'), rRoll.sDesc, sDiseaseName)
 	end
 
 	rRoll.nodeDisease = DB.getPath(nodeDisease)
@@ -317,17 +309,17 @@ function onRoll(rSource, _, rRoll)
 		if #rRoll.aDice > 0 then
 			local nFirstDie = rRoll.aDice[1].result or 0
 			if nFirstDie == 20 then
-				rRoll.sSaveResult = "autosuccess"
+				rRoll.sSaveResult = 'autosuccess'
 			elseif nFirstDie == 1 then
-				rRoll.sSaveResult = "autofailure"
+				rRoll.sSaveResult = 'autofailure'
 			end
 		end
-		if (rRoll.sSaveResult or "") == "" then
+		if (rRoll.sSaveResult or '') == '' then
 			local nTarget = tonumber(rRoll.nTarget) or 0
 			if rRoll.nTotal >= nTarget then
-				rRoll.sSaveResult = "success"
+				rRoll.sSaveResult = 'success'
 			else
-				rRoll.sSaveResult = "failure"
+				rRoll.sSaveResult = 'failure'
 			end
 		end
 		notifyApplySave(rSource, rRoll)
@@ -335,7 +327,7 @@ function onRoll(rSource, _, rRoll)
 end
 
 function onInit()
-	GameSystem.actions["disease"] = { bUseModStack = true }
-	ActionsManager.registerModHandler("disease", modSave)
-	ActionsManager.registerResultHandler("disease", onRoll)
+	GameSystem.actions['disease'] = { bUseModStack = true }
+	ActionsManager.registerModHandler('disease', modSave)
+	ActionsManager.registerResultHandler('disease', onRoll)
 end

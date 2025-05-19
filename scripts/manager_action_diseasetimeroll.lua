@@ -5,7 +5,7 @@
 function getRoll(_, tDice, nFixedInt, sField)
 	local rRoll = {}
 
-	rRoll.sType = "diseasetimeroll"
+	rRoll.sType = 'diseasetimeroll'
 	rRoll.aDice = tDice
 	rRoll.nMod = nFixedInt
 	rRoll.sDesc = sField
@@ -34,17 +34,17 @@ function onRoll(rSource, _, rRoll)
 	if nodeDisease then
 		rRoll.nTotal = ActionsManager.total(rRoll)
 
-		if rRoll.sDesc == "Onset" then
-			DB.setValue(nodeDisease, "onset_interval", "number", rRoll.nTotal)
-		elseif rRoll.sDesc == "Frequency" then
-			DB.setValue(nodeDisease, "freq_interval", "number", rRoll.nTotal)
-		elseif rRoll.sDesc == "Duration" then
-			DB.setValue(nodeDisease, "duration_interval", "number", rRoll.nTotal)
+		if rRoll.sDesc == 'Onset' then
+			DB.setValue(nodeDisease, 'onset_interval', 'number', rRoll.nTotal)
+		elseif rRoll.sDesc == 'Frequency' then
+			DB.setValue(nodeDisease, 'freq_interval', 'number', rRoll.nTotal)
+		elseif rRoll.sDesc == 'Duration' then
+			DB.setValue(nodeDisease, 'duration_interval', 'number', rRoll.nTotal)
 		end
 	end
 end
 
 function onInit()
-	GameSystem.actions["diseasetimeroll"] = { bUseModStack = false }
-	ActionsManager.registerResultHandler("diseasetimeroll", onRoll)
+	GameSystem.actions['diseasetimeroll'] = { bUseModStack = false }
+	ActionsManager.registerResultHandler('diseasetimeroll', onRoll)
 end

@@ -15,12 +15,12 @@ function round(number, decimals)
 end
 
 function onInit()
-	LibraryData.setRecordTypeInfo("disease", {
+	LibraryData.setRecordTypeInfo('disease', {
 		bExport = true,
-		aDataMap = { "disease", "reference.diseases" },
-		sRecordDisplayClass = "referencedisease",
-		aGMListButtons = { "button_feat_type" },
-		aPlayerListButtons = { "button_feat_type" },
-		aCustomFilters = { ["Type"] = { sField = "type" } },
+		aDataMap = { 'disease', 'reference.diseases' },
+		sRecordDisplayClass = 'referencedisease',
+		aGMListButtons = { 'button_feat_type' },
+		aPlayerListButtons = { 'button_feat_type' },
+		aCustomFilters = { ['Type'] = { sField = 'type' } },
 	})
 end

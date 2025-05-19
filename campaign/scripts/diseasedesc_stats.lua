@@ -6,15 +6,15 @@
 --	The string is displayed once the window is locked for a simpler UX.
 --	luacheck: globals generateOnsetString
 function generateOnsetString()
-	local sOnset = ""
+	local sOnset = ''
 
-	if onset_unit.getValue() ~= "" then
+	if onset_unit.getValue() ~= '' then
 		sOnset = onset_interval.getValue()
 	end
-	if onset_unit.getValue() ~= "" then
-		sOnset = sOnset .. " " .. onset_unit.getValue()
+	if onset_unit.getValue() ~= '' then
+		sOnset = sOnset .. ' ' .. onset_unit.getValue()
 	else
-		sOnset = ""
+		sOnset = ''
 	end
 
 	return sOnset
@@ -24,15 +24,15 @@ end
 --	The string is displayed once the window is locked for a simpler UX.
 --	luacheck: globals generateDurationString
 function generateDurationString()
-	local sDur = ""
+	local sDur = ''
 
-	if duration_unit.getValue() ~= "" then
+	if duration_unit.getValue() ~= '' then
 		sDur = duration_interval.getValue()
 	end
-	if duration_unit.getValue() ~= "" then
-		sDur = sDur .. " " .. duration_unit.getValue()
+	if duration_unit.getValue() ~= '' then
+		sDur = sDur .. ' ' .. duration_unit.getValue()
 	else
-		sDur = ""
+		sDur = ''
 	end
 
 	return sDur
@@ -42,38 +42,38 @@ end
 --	The string is displayed once the window is locked for a simpler UX.
 --	luacheck: globals generateSaveString generateFrequencyString save_string
 function generateSaveString()
-	local sSave = ""
+	local sSave = ''
 
 	local nSaveDc = savedc.getValue()
 	local sSaveType = savetype.getValue()
 	if nSaveDc ~= 0 then
-		sSave = "DC " .. nSaveDc
+		sSave = 'DC ' .. nSaveDc
 	end
-	if sSaveType ~= "" then
-		sSave = sSave .. " " .. sSaveType
+	if sSaveType ~= '' then
+		sSave = sSave .. ' ' .. sSaveType
 	end
 
 	local sFreq = generateFrequencyString()
-	if sSave == "" then
+	if sSave == '' then
 		sSave = sFreq
-	elseif sFreq ~= "" then
-		sSave = sSave .. "    " .. sFreq
+	elseif sFreq ~= '' then
+		sSave = sSave .. '    ' .. sFreq
 	end
 
 	local sDur = generateDurationString()
-	if sSave == "" then
+	if sSave == '' then
 		sSave = sDur
 	elseif duration_interval.getValue() > 0 then
-		sSave = sSave .. " " .. Interface.getString("disease_savestring_for") .. " " .. sDur
+		sSave = sSave .. ' ' .. Interface.getString('disease_savestring_for') .. ' ' .. sDur
 	end
 
 	local sOnset = generateOnsetString()
-	if sSave ~= "" and onset_interval.getValue() > 0 then
-		sSave = sSave .. " " .. Interface.getString("disease_savestring_after") .. " " .. sOnset
+	if sSave ~= '' and onset_interval.getValue() > 0 then
+		sSave = sSave .. ' ' .. Interface.getString('disease_savestring_after') .. ' ' .. sOnset
 	end
 
-	if sSave == "" then
-		sSave = Interface.getString("disease_savestring_none")
+	if sSave == '' then
+		sSave = Interface.getString('disease_savestring_none')
 	end
 
 	save_string.setValue(sSave)
@@ -92,15 +92,15 @@ end
 --	The string is displayed once the window is locked for a simpler UX.
 --	luacheck: globals generateFrequencyString
 function generateFrequencyString()
-	local sFreq = ""
+	local sFreq = ''
 
-	if freq_unit.getValue() ~= "" then
+	if freq_unit.getValue() ~= '' then
 		sFreq = round(freq_interval.getValue(), 1)
 	end
-	if freq_unit.getValue() ~= "" then
+	if freq_unit.getValue() ~= '' then
 		sFreq = sFreq .. freq_unit.getValue()
 	else
-		sFreq = ""
+		sFreq = ''
 	end
 
 	return sFreq
@@ -109,11 +109,11 @@ end
 --	This function sets the visibility and editability of various fields on the malady sheet when it is unlocked.
 -- luacheck: globals subtype poison_effect_primary poison_effect_secondary disease_effect description associated_npc_name
 local function ifLocked(sType)
-	local sSubtype = ""
-	if subtype.getValue() and subtype.getValue() ~= "" then
-		sSubtype = " (" .. subtype.getValue() .. ")"
+	local sSubtype = ''
+	if subtype.getValue() and subtype.getValue() ~= '' then
+		sSubtype = ' (' .. subtype.getValue() .. ')'
 	end
-	type_biglabel.setValue("[" .. type.getValue() .. sSubtype .. "]")
+	type_biglabel.setValue('[' .. type.getValue() .. sSubtype .. ']')
 
 	generateSaveString()
 
@@ -125,8 +125,7 @@ local function ifLocked(sType)
 	associated_npc_name.setVisible(false)
 	associated_npc_name_label.setVisible(false)
 
-	local bInUse = DB.getName(getDatabaseNode(), "..") ~= "disease"
-		and DB.getName(getDatabaseNode(), "...") ~= "reference"
+	local bInUse = DB.getName(getDatabaseNode(), '..') ~= 'disease' and DB.getName(getDatabaseNode(), '...') ~= 'reference'
 
 	if bInUse then
 		saveroll.setVisible(true)
@@ -138,12 +137,12 @@ local function ifLocked(sType)
 	duration_interval.setVisible(false)
 	duration_unit.setVisible(false)
 	duration_dice.setVisible(false)
-	if sType ~= "disease" then
-		if poison_effect_primary.getValue() == "" then
+	if sType ~= 'disease' then
+		if poison_effect_primary.getValue() == '' then
 			poison_effect_primary.setVisible(true)
 			poison_effect_primary_label.setVisible(true)
 		end
-		if poison_effect_secondary.getValue() == "" then
+		if poison_effect_secondary.getValue() == '' then
 			poison_effect_secondary.setVisible(true)
 			poison_effect_secondary_label.setVisible(true)
 		end
@@ -158,10 +157,10 @@ local function ifLocked(sType)
 		poison_effect_secondary.setVisible(false)
 		poison_effect_secondary_label.setVisible(false)
 	end
-	if sType == "poison" then
+	if sType == 'poison' then
 		disease_effect.setVisible(false)
 
-		if bInUse and save_string.getValue() and save_string.getValue() ~= "none" then
+		if bInUse and save_string.getValue() and save_string.getValue() ~= 'none' then
 			raisesave.setVisible(true)
 		else
 			raisesave.setVisible(false)
@@ -174,14 +173,10 @@ local function ifLocked(sType)
 		end
 	end
 
-	if
-		disease_effect.getValue() == "\n<p></p>"
-		and poison_effect_primary.getValue() == ""
-		and poison_effect_primary.getValue() == ""
-	then
+	if disease_effect.getValue() == '\n<p></p>' and poison_effect_primary.getValue() == '' and poison_effect_primary.getValue() == '' then
 		section_effect_label.setVisible(false)
 	end
-	if description.getValue() == "\n<p></p>" then
+	if description.getValue() == '\n<p></p>' then
 		section_description_label.setVisible(false)
 	end
 
@@ -231,8 +226,8 @@ local function ifUnlocked(sType)
 	duration_interval.setVisible(true)
 	duration_unit.setVisible(true)
 
-	if sType ~= "disease" then
-		if DB.getName(getDatabaseNode(), "..") == "disease" or DB.getName(getDatabaseNode(), "...") == "reference" then
+	if sType ~= 'disease' then
+		if DB.getName(getDatabaseNode(), '..') == 'disease' or DB.getName(getDatabaseNode(), '...') == 'reference' then
 			duration_dice.setVisible(true)
 		else
 			duration_dice.setVisible(false)
@@ -251,10 +246,10 @@ local function ifUnlocked(sType)
 		poison_effect_secondary.setVisible(false)
 		poison_effect_secondary_label.setVisible(false)
 	end
-	if sType == "poison" then
+	if sType == 'poison' then
 		disease_effect.setVisible(false)
 	end
-	if sType ~= "poison" then
+	if sType ~= 'poison' then
 		disease_effect.setVisible(true)
 	end
 
@@ -264,7 +259,7 @@ local function ifUnlocked(sType)
 	onset_label.setVisible(true)
 	onset_unit.setVisible(true)
 	onset_interval.setVisible(true)
-	if DB.getName(getDatabaseNode(), "..") == "disease" or DB.getName(getDatabaseNode(), "...") == "reference" then
+	if DB.getName(getDatabaseNode(), '..') == 'disease' or DB.getName(getDatabaseNode(), '...') == 'reference' then
 		onset_dice.setVisible(true)
 	else
 		onset_dice.setVisible(false)
@@ -275,7 +270,7 @@ local function ifUnlocked(sType)
 	freq_label.setVisible(true)
 	freq_unit.setVisible(true)
 	freq_interval.setVisible(true)
-	if DB.getName(getDatabaseNode(), "..") == "disease" or DB.getName(getDatabaseNode(), "...") == "reference" then
+	if DB.getName(getDatabaseNode(), '..') == 'disease' or DB.getName(getDatabaseNode(), '...') == 'reference' then
 		freq_dice.setVisible(true)
 	else
 		freq_dice.setVisible(false)
@@ -304,15 +299,15 @@ function update()
 		ifUnlocked(sType)
 	end
 
-	savesreq.update(bReadOnly, nil, "cure_label")
-	savecount_consec.update(false, nil, "cure_label", savesreq)
-	if sType ~= "poison" then
+	savesreq.update(bReadOnly, nil, 'cure_label')
+	savecount_consec.update(false, nil, 'cure_label', savesreq)
+	if sType ~= 'poison' then
 		disease_effect.update(bReadOnly)
 	end
-	if sType ~= "disease" then
+	if sType ~= 'disease' then
 		poison_effect_primary.update(bReadOnly)
 	end
-	if sType ~= "disease" then
+	if sType ~= 'disease' then
 		poison_effect_secondary.update(bReadOnly)
 	end
 	description.update(bReadOnly)
